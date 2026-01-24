@@ -1,0 +1,20 @@
+{
+  "Group": "Fivemanage",
+  "Name": "Logger",
+  "Version": "1.0.0",
+  "Description": "Fivemanage Logging SDK",
+  "Authors": [
+    {
+      "Name": "Christopher Gjelten",
+      "Email": "support@fivemanage.com",
+      "Url": "https://fivemanage.com"
+    }
+  ],
+  "Website": "https://fivemanage.com",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": false,
+  "Main": "com.fivemanage.FivemanagePlugin"
+}

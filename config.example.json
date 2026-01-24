@@ -1,0 +1,14 @@
+{
+  "LogProvider": {
+    "Provider": "fivemanage",
+    "ApiKey": "your-fivemanage-api-key",
+    "WriteToDisk": false,
+    "EnableBatching": true,
+    "BufferSize": 10,
+    "FlushIntervalMs": 5000
+  },
+  "PlayerEvents": {
+    "Dataset": "default",
+    "Enabled": true
+  }
+}
