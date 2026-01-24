@@ -1,15 +1,25 @@
-# Fivemanage Logger for Hytale
+# Fivemanage Logger - Hytale Server Logging & Analytics
 
-A logging SDK for Hytale servers with support for multiple providers including Fivemanage, Grafana Loki, and local file logging.
+The ultimate logging solution for Hytale dedicated servers. Track player activity, monitor server events, and send logs to Fivemanage, Grafana Loki, or local files.
+
+## Why Use Fivemanage Logger?
+
+- **Track Everything** — Player joins, disconnects, block breaks, and custom events
+- **Multiple Backends** — Send logs to Fivemanage, Grafana Loki, or local files
+- **Built for Performance** — Async batched logging with zero impact on server TPS
+- **Easy Setup** — Drop-in JAR, simple JSON config, works out of the box
+- **Open Source** — MIT licensed, customize to your needs
 
 ## Features
 
-- **Multiple Log Providers**: Fivemanage, Grafana Loki, and file-based logging
-- **Batched Logging**: Efficient log batching with configurable buffer size and flush intervals
-- **Player Event Tracking**: Automatic logging of player connect, disconnect, and ready events
-- **Block Event Tracking**: Track block break events
-- **Dual Logging**: Optionally write logs to disk while sending to remote providers
-- **Metadata Support**: Attach custom metadata to all log entries
+| Feature | Description |
+|---------|-------------|
+| **Multi-Provider Support** | Fivemanage, Grafana Loki, file-based logging |
+| **Batched Logging** | Configurable buffer size and flush intervals |
+| **Player Event Tracking** | Automatic logging of connect, disconnect, ready events |
+| **Block Event Tracking** | Track when players break blocks |
+| **Dual Logging** | Write to disk while sending to remote providers |
+| **Rich Metadata** | Attach custom metadata to all log entries |
 
 ## Installation
 
@@ -17,9 +27,9 @@ A logging SDK for Hytale servers with support for multiple providers including F
 2. Place the `.jar` file in your Hytale server's `mods` directory
 3. Create a config file at `mods/Fivemanage_Logger/config.json`
 
-## Configuration
+## Quick Start
 
-### Fivemanage
+### Fivemanage Cloud
 
 ```json
 {
@@ -40,15 +50,15 @@ A logging SDK for Hytale servers with support for multiple providers including F
 
 Get your API key from [fivemanage.com](https://fivemanage.com).
 
-### Grafana Loki
+### Grafana Loki / Grafana Cloud
 
 ```json
 {
   "LogProvider": {
     "Provider": "grafana-loki",
-    "Endpoint": "https://your-loki-instance.com",
-    "Username": "your-username",
-    "Password": "your-password",
+    "Endpoint": "https://logs-prod-us-central1.grafana.net",
+    "Username": "your-grafana-username",
+    "Password": "your-grafana-api-key",
     "WriteToDisk": false,
     "EnableBatching": true,
     "BufferSize": 10,
@@ -61,13 +71,13 @@ Get your API key from [fivemanage.com](https://fivemanage.com).
 }
 ```
 
-For Grafana Cloud, use your Grafana Cloud Loki URL as the endpoint and your Grafana Cloud credentials.
+## Configuration Reference
 
-### Configuration Options
+### Log Provider Options
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `Provider` | string | `fivemanage` or `grafana-loki` |
+| `Provider` | string | `fivemanage`, `grafana-loki`, or `file` |
 | `ApiKey` | string | API key for Fivemanage |
 | `Endpoint` | string | Loki push endpoint URL |
 | `Username` | string | Basic auth username (Loki) |
@@ -77,50 +87,60 @@ For Grafana Cloud, use your Grafana Cloud Loki URL as the endpoint and your Graf
 | `BufferSize` | integer | Logs to buffer before flush (default: 10) |
 | `FlushIntervalMs` | integer | Max time before flush in ms (default: 5000) |
 
-### Player Events
+### Player Events Options
 
 | Option | Type | Description |
 |--------|------|-------------|
 | `Dataset` | string | Dataset/label name for player events |
 | `Enabled` | boolean | Enable automatic player event logging |
 
-## Usage
+## Usage in Your Hytale Mod
 
-### Logging API
+Use the `FivemanageLogger` API to send custom logs from your own Hytale mods:
 
 ```java
-
-
+import org.fivemanage.FivemanageLogger;
 import java.util.Map;
 
 // Log with metadata
 Map<String, Object> metadata = Map.of(
-        "player", "Steve",
-        "location", "x:100, y:64, z:200"
+    "player", "Steve",
+    "location", "x:100, y:64, z:200"
 );
 
-FivemanageLogger.
-
-        info("my-dataset","Player spawned",metadata);
-FivemanageLogger.
-
-        warn("my-dataset","Low health warning",metadata);
-FivemanageLogger.
-
-        error("my-dataset","Something went wrong",metadata);
-FivemanageLogger.
-
-        debug("my-dataset","Debug info",metadata);
+FivemanageLogger.info("my-dataset", "Player spawned", metadata);
+FivemanageLogger.warn("my-dataset", "Low health warning", metadata);
+FivemanageLogger.error("my-dataset", "Something went wrong", metadata);
+FivemanageLogger.debug("my-dataset", "Debug info", metadata);
 ```
 
-### Automatic Event Tracking
+## Automatic Event Tracking
 
 When `PlayerEvents.Enabled` is `true`, these events are logged automatically:
 
-- **Player Connect** — when a player connects
-- **Player Ready** — when a player is fully loaded
-- **Player Disconnect** — when a player leaves
-- **Block Break** — when a player breaks a block
+| Event | Description |
+|-------|-------------|
+| **Player Connect** | When a player connects to the server |
+| **Player Ready** | When a player is fully loaded and ready |
+| **Player Disconnect** | When a player leaves the server |
+
+## Use Cases
+
+- **Server Administration** — Monitor player activity and server health
+- **Anti-Cheat Logging** — Track suspicious player behavior
+- **Analytics Dashboard** — Build dashboards with Grafana
+- **Audit Trails** — Keep records of all server events
+- **Debugging** — Track down issues in your Hytale mods
+
+## Related
+
+- [Fivemanage Platform](https://fivemanage.com)
+- [Fivemanage Lite](https://github.com/fivemanage/lite)
+- [Grafana Loki](https://grafana.com/oss/loki/)
+
+## Creds
+- [Hytale WebServer Plugin](https://github.com/nitrado/hytale-plugin-webserver)
+- [Hytale Modding Documentation](https://hytalemodding.dev)
 
 ## Support
 
