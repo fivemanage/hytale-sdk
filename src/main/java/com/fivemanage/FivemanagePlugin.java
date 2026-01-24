@@ -29,8 +29,6 @@ public class FivemanagePlugin extends JavaPlugin {
         LogProviderConfig logProviderConfig = config.get().getLogProviderConfig();
 
         internalLogger.atInfo().log("Config loaded - Provider: " + logProviderConfig.getProvider());
-        internalLogger.atInfo().log("Config map size: " + logProviderConfig.getConfig().size());
-        internalLogger.atInfo().log("Config contents: " + logProviderConfig.getConfig());
 
         if (logProviderConfig == null || logProviderConfig.getConfig().isEmpty()) {
             internalLogger.atWarning().log("No logging configuration found, skipping plugin setup.");
