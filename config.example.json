@@ -1,6 +1,7 @@
 {
   "LogProvider": {
     "Provider": "fivemanage",
+    "Endpoint": "https://api.fivemanage.com/api/logs/batch",
     "ApiKey": "your-fivemanage-api-key",
     "WriteToDisk": false,
     "EnableBatching": true,
