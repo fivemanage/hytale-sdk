@@ -15,7 +15,7 @@ A logging SDK for Hytale servers with support for multiple providers including F
 
 1. Download the latest release from [Releases](../../releases)
 2. Place the `.jar` file in your Hytale server's `mods` directory
-3. Create a config file at `mods/Fivemanage/config.json`
+3. Create a config file at `mods/Fivemanage_Logger/config.json`
 
 ## Configuration
 
