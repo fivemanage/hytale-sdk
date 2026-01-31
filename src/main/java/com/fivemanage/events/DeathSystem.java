@@ -55,6 +55,7 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
 
                     metadata.put("killerName", killer.getDisplayName());
                     metadata.put("killerId", killerUuid.getUuid().toString());
+                    metadata.put("killerType", "player");
                 } else {
                     NPCEntity npc = store.getComponent(killerRef, NPCEntity.getComponentType());
                     if (npc != null) {
@@ -64,7 +65,7 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
 
                         metadata.put("killedBy", npc.getRoleName());
                         // maybe valuable?
-                        metadata.put("killedByNpc", true);
+                        metadata.put("killerType", "npc");
                     }
                 }
             }
