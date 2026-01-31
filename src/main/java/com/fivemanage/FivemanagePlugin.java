@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.fivemanage.events.DeathSystem;
 import com.fivemanage.events.PlayerEvents;
 
 import javax.annotation.Nonnull;
@@ -41,6 +42,8 @@ public class FivemanagePlugin extends JavaPlugin {
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, PlayerEvents::onPlayerReady);
         this.getEventRegistry().registerGlobal(PlayerConnectEvent.class, PlayerEvents::onPlayerConnect);
         this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, PlayerEvents::onPlayerDisconnect);
+
+        this.getEntityStoreRegistry().registerSystem(new DeathSystem());
 
         // kinda weird log with a lot of data
         // gotta figure out how to make this data valuable
