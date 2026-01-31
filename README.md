@@ -16,8 +16,8 @@ The ultimate logging solution for Hytale dedicated servers. Track player activit
 |---------|-------------|
 | **Multi-Provider Support** | Fivemanage, Grafana Loki, file-based logging |
 | **Batched Logging** | Configurable buffer size and flush intervals |
-| **Player Event Tracking** | Automatic logging of connect, disconnect, ready events |
-| **Block Event Tracking** | Track when players break blocks |
+| **Player Event Tracking** | Automatic logging of connect, disconnect, session durations |
+| **Death Events** | Track when players are killed and kill other players |
 | **Dual Logging** | Write to disk while sending to remote providers |
 | **Rich Metadata** | Attach custom metadata to all log entries |
 
@@ -114,7 +114,10 @@ FivemanageLogger.error("my-dataset", "Something went wrong", metadata);
 FivemanageLogger.debug("my-dataset", "Debug info", metadata);
 ```
 
-## Automatic Event Tracking
+## Session duration
+The SDK will automatically store each player when they connect and record their session. Once they disconnect, we send the duration to your selected provider.
+
+## Player Events
 
 When `PlayerEvents.Enabled` is `true`, these events are logged automatically:
 
@@ -123,6 +126,58 @@ When `PlayerEvents.Enabled` is `true`, these events are logged automatically:
 | **Player Connect** | When a player connects to the server |
 | **Player Ready** | When a player is fully loaded and ready |
 | **Player Disconnect** | When a player leaves the server |
+
+
+## Death Events
+The Death System automatically logs detailed information when a player dies. These events can help track PvP deaths, NPC kills, causes of death, and more.
+
+### Death Event Metadata
+
+When a player dies, the following information is captured (when applicable):
+
+| Field            | Type    | Description                                               |
+|------------------|---------|-----------------------------------------------------------|
+| `playerName`     | string  | Name of the player who died                               |
+| `playerId`       | string  | UUID of the player who died                               |
+| `killerName`     | string  | Name of the killer (if killed by another player)          |
+| `killerId`       | string  | UUID of the killer (if killed by another player)          |
+| `killerType`     | string  | "player" or "npc" depending on killer entity              |
+| `killedBy`       | string  | NPC role or type name if killed by an NPC                 |
+| `deathAmount`    | number  | Amount of damage taken before death                       |
+| `deathCauseId`   | string  | Cause ID (e.g., "physical", "fire", etc.)                 |
+
+#### Example Death Event
+
+```json
+{
+  "playerName": "Steve",
+  "playerId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "killerName": "Alex",
+  "killerId": "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy",
+  "killerType": "player",
+  "deathAmount": 18,
+  "deathCauseId": "Physical"
+}
+```
+
+If killed by an NPC:
+
+```json
+{
+  "playerName": "Steve",
+  "playerId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "killedBy": "Skeleton_Incandescent_Fighter",
+  "killerType": "npc",
+  "deathAmount": 6,
+  "deathCauseId": "Physical"
+}
+```
+
+> **Note:** Some fields may be omitted depending on the specific death circumstances (e.g., no `killerName` if there was no killer).
+
+These logs appear under the dataset and label you configure for player events (e.g., `player.died`). You can use this data for analytics, kill feeds, PvP stats, auditing, or integrations with your logging/monitoring stack.
+
+
 
 ## Use Cases
 
