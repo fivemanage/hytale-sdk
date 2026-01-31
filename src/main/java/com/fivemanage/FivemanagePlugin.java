@@ -9,7 +9,6 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.fivemanage.events.PlayerEvents;
-import com.fivemanage.events.ecs.BreakBlockEvent;
 
 import javax.annotation.Nonnull;
 
@@ -38,13 +37,14 @@ public class FivemanagePlugin extends JavaPlugin {
         FivemanageLogger.initialize(logProviderConfig.getProvider(), logProviderConfig.getConfig());
         internalLogger.atInfo().log("FivemanageLogger initialized with provider: " + logProviderConfig.getProvider());
 
+        // this should be consolidated into a single class and method
         this.getEventRegistry().registerGlobal(PlayerReadyEvent.class, PlayerEvents::onPlayerReady);
         this.getEventRegistry().registerGlobal(PlayerConnectEvent.class, PlayerEvents::onPlayerConnect);
         this.getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, PlayerEvents::onPlayerDisconnect);
 
         // kinda weird log with a lot of data
         // gotta figure out how to make this data valuable
-        this.getEntityStoreRegistry().registerSystem(new BreakBlockEvent());
+        //this.getEntityStoreRegistry().registerSystem(new BreakBlockEvent());
     }
 
     @Override
