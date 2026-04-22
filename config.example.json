@@ -1,15 +1,22 @@
 {
   "LogProvider": {
     "Provider": "fivemanage",
-    "Endpoint": "https://api.fivemanage.com/api/logs/batch",
     "ApiKey": "your-fivemanage-api-key",
+    "Endpoint": "",
+    "Username": "",
+    "Password": "",
     "WriteToDisk": false,
     "EnableBatching": true,
     "BufferSize": 10,
     "FlushIntervalMs": 5000
   },
-  "PlayerEvents": {
-    "Dataset": "default",
-    "Enabled": true
+  "Events": {
+    "ServerLifecycle": { "Enabled": true, "Dataset": "default" },
+    "PlayerEvents": { "Enabled": true, "Dataset": "default" },
+    "Chat": { "Enabled": true, "Dataset": "default" },
+    "Combat": { "Enabled": true, "Dataset": "default" },
+    "BlockEvents": { "Enabled": false, "Dataset": "default" },
+    "Gameplay": { "Enabled": true, "Dataset": "default" },
+    "Exploration": { "Enabled": true, "Dataset": "default" }
   }
 }

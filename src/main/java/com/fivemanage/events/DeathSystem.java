@@ -8,7 +8,6 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
-import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -19,6 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DeathSystem extends DeathSystems.OnDeathSystem {
+    private String dataset = "default";
+
+    public void setDataset(String dataset) {
+        this.dataset = dataset;
+    }
+
     @Nonnull
     @Override
     public Query<EntityStore> getQuery() {
@@ -33,8 +38,10 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
             @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         Player playerComponent = store.getComponent(ref, Player.getComponentType());
         UUIDComponent uuid = store.getComponent(ref, UUIDComponent.getComponentType());
-        // not sure if we should just do this without anything else
-        assert playerComponent != null;
+
+        if (playerComponent == null || uuid == null) {
+            return;
+        }
 
         Map<String, Object> metadata = new HashMap<>();
 
@@ -92,6 +99,6 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
             metadata.put("deathCauseId", deathCause.getId());
         }
 
-        FivemanageLogger.debug("default", "player.died: " + playerComponent.getDisplayName(), metadata);
+        FivemanageLogger.info(dataset, "player.died", metadata);
     }
 }

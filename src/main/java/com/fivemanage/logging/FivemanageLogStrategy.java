@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class FivemanageLogStrategy implements LogStrategy {
-    private static final String API_URL = "https://api.fivemanage.com/api/logs/batch";
+    private static final String API_URL = "https://api.fivemanage.com/api/v3/logs";
     private static final Gson gson = new Gson();
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private String apiKey;

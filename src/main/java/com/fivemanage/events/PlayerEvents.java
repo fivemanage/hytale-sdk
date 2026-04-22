@@ -12,6 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerEvents {
+    private static String dataset = "default";
+
+    public static void setDataset(String ds) {
+        dataset = ds;
+    }
+
     public static void onPlayerReady(PlayerReadyEvent event) {
         Player player = event.getPlayer();
 
@@ -19,7 +25,7 @@ public class PlayerEvents {
         metadata.put("action", "Player Ready");
         metadata.put("playerName", player.getDisplayName());
 
-        FivemanageLogger.info("default", "player.joinedServer", metadata);
+        FivemanageLogger.info(dataset, "player.joinedServer", metadata);
     }
 
     public static void onPlayerConnect(PlayerConnectEvent event) {
@@ -30,7 +36,7 @@ public class PlayerEvents {
         metadata.put("action", "Player Connect");
         metadata.put("username", player.getUsername());
 
-        FivemanageLogger.info("default", "player.connected", metadata);
+        FivemanageLogger.info(dataset, "player.connected", metadata);
     }
 
     public static void onPlayerDisconnect(PlayerDisconnectEvent event) {
@@ -51,6 +57,6 @@ public class PlayerEvents {
         metadata.put("sessionDurationSeconds", sessionDurationSeconds);
         metadata.put("sessionDurationMs", sessionDurationMs);
 
-        FivemanageLogger.info("default", "player.disconnected", metadata);
+        FivemanageLogger.info(dataset, "player.disconnected", metadata);
     }
 }

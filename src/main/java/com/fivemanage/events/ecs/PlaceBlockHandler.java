@@ -1,34 +1,36 @@
 package com.fivemanage.events.ecs;
 
+import com.fivemanage.FivemanageLogger;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.event.events.ecs.PlaceBlockEvent;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
-import com.fivemanage.FivemanageLogger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BreakBlockEvent extends EntityEventSystem<EntityStore, com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent> {
+public class PlaceBlockHandler extends EntityEventSystem<EntityStore, PlaceBlockEvent> {
     private static String dataset = "default";
 
     public static void setDataset(String ds) {
         dataset = ds;
     }
 
-    public BreakBlockEvent() {
-        super(com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent.class);
+    public PlaceBlockHandler() {
+        super(PlaceBlockEvent.class);
     }
 
     @Override
     public void handle(int i, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk,
                        @NonNullDecl Store<EntityStore> store,
                        @NonNullDecl CommandBuffer<EntityStore> commandBuffer,
-                       @NonNullDecl com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent breakBlockEvent) {
+                       @NonNullDecl PlaceBlockEvent event) {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
         Player player = store.getComponent(ref, Player.getComponentType());
@@ -38,13 +40,20 @@ public class BreakBlockEvent extends EntityEventSystem<EntityStore, com.hypixel.
         }
 
         Map<String, Object> metadata = new HashMap<>();
-        metadata.put("action", "Block Break");
-        metadata.put("blockType", breakBlockEvent.getBlockType().toString());
-        metadata.put("blockId", breakBlockEvent.getBlockType().getId());
+        metadata.put("action", "Block Place");
         metadata.put("playerName", player.getDisplayName());
         metadata.put("playerId", playerRef.getUuid().toString());
 
-        FivemanageLogger.info(dataset, "block.break", metadata);
+        ItemStack item = event.getItemInHand();
+        if (item != null && !item.isEmpty()) {
+            metadata.put("itemId", item.getItemId());
+            String blockKey = item.getBlockKey();
+            if (blockKey != null) {
+                metadata.put("blockKey", blockKey);
+            }
+        }
+
+        FivemanageLogger.info(dataset, "block.place", metadata);
     }
 
     @NullableDecl

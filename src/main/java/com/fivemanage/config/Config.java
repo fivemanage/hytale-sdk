@@ -10,28 +10,31 @@ public class Config {
                     (config, value) -> config.logProviderConfig = value,
                     (config) -> config.logProviderConfig)
             .add()
-            .append(new KeyedCodec<PlayerEventsConfig>("PlayerEvents", PlayerEventsConfig.CODEC),
-                    (config, value) -> config.playerEventsConfig = value,
-                    (config) -> config.playerEventsConfig)
+            .append(new KeyedCodec<EventsConfig>("Events", EventsConfig.CODEC),
+                    (config, value) -> config.eventsConfig = value,
+                    (config) -> config.eventsConfig)
             .add()
             .build();
 
     private LogProviderConfig logProviderConfig = new LogProviderConfig();
-    private PlayerEventsConfig playerEventsConfig = new PlayerEventsConfig();
+    private EventsConfig eventsConfig = new EventsConfig();
 
     public Config() {
     }
-
 
     public LogProviderConfig getLogProviderConfig() {
         return logProviderConfig;
     }
 
-    public PlayerEventsConfig getPlayerEventsConfig() {
-        return playerEventsConfig;
+    public EventsConfig getEventsConfig() {
+        return eventsConfig;
     }
 
     public void setLogProviderConfig(LogProviderConfig logProviderConfig) {
         this.logProviderConfig = logProviderConfig;
+    }
+
+    public void setEventsConfig(EventsConfig eventsConfig) {
+        this.eventsConfig = eventsConfig;
     }
 }
