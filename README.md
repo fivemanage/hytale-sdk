@@ -17,6 +17,7 @@ The ultimate logging solution for Hytale dedicated servers. Track player activit
 | **Multi-Provider Support** | Fivemanage, Grafana Loki, file-based logging |
 | **Batched Logging** | Configurable buffer size and flush intervals |
 | **Player Event Tracking** | Automatic logging of connect, disconnect, session durations |
+| **Server Heartbeat** | Periodically sends current and max player counts for live dashboards |
 | **Death Events** | Track when players are killed and kill other players |
 | **Dual Logging** | Write to disk while sending to remote providers |
 | **Rich Metadata** | Attach custom metadata to all log entries |
@@ -93,6 +94,14 @@ Get your API key from [fivemanage.com](https://fivemanage.com).
 |--------|------|-------------|
 | `Dataset` | string | Dataset/label name for player events |
 | `Enabled` | boolean | Enable automatic player event logging |
+
+### Server Heartbeat Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `Dataset` | string | Dataset/label name for player count heartbeat logs |
+| `Enabled` | boolean | Enable periodic player count heartbeat logs |
+| `IntervalMs` | integer | Heartbeat interval in milliseconds (default: `30000`) |
 
 ## Usage in Your Hytale Mod
 

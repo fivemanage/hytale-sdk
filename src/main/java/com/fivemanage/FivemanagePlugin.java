@@ -5,6 +5,7 @@ import com.fivemanage.config.LogProviderConfig;
 import com.fivemanage.events.ChatEvents;
 import com.fivemanage.events.GameplayEvents;
 import com.fivemanage.events.ServerLifecycleEvents;
+import com.fivemanage.events.ServerHeartbeat;
 import com.fivemanage.events.DeathSystem;
 import com.fivemanage.events.PlayerEvents;
 import com.fivemanage.events.ecs.*;
@@ -52,6 +53,11 @@ public class FivemanagePlugin extends JavaPlugin {
             this.getEventRegistry().registerGlobal(ShutdownEvent.class, ServerLifecycleEvents::onShutdown);
             ServerLifecycleEvents.onServerStarted();
             internalLogger.atInfo().log("Registered: ServerLifecycle events");
+        }
+
+        if (events.getServerHeartbeat().isEnabled()) {
+            ServerHeartbeat.start(events.getServerHeartbeat().getDataset(), events.getServerHeartbeat().getIntervalMs());
+            internalLogger.atInfo().log("Registered: ServerHeartbeat events");
         }
 
         if (events.getPlayerEvents().isEnabled()) {
@@ -110,6 +116,7 @@ public class FivemanagePlugin extends JavaPlugin {
 
     @Override
     protected void shutdown() {
+        ServerHeartbeat.stop();
         internalLogger.atInfo().log("Flushing logs before shutdown...");
         FivemanageLogger.shutdown();
     }

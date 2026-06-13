@@ -27,10 +27,10 @@ public class GameplayEvents {
         Ref<EntityStore> ref = event.getPlayerRef();
         Store<EntityStore> store = event.getStore();
         if (ref != null && store != null && ref.isValid()) {
-            Player player = store.getComponent(ref, Player.getComponentType());
+            PlayerRef player = store.getComponent(ref, PlayerRef.getComponentType());
             PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
             if (player != null) {
-                metadata.put("playerName", player.getDisplayName());
+                metadata.put("playerName", player.getUsername());
             }
             if (playerRef != null) {
                 metadata.put("playerId", playerRef.getUuid().toString());

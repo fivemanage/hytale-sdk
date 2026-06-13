@@ -29,16 +29,19 @@ public class CraftRecipeHandler extends EntityEventSystem<EntityStore, CraftReci
                        @NonNullDecl CraftRecipeEvent.Post event) {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-        Player player = store.getComponent(ref, Player.getComponentType());
 
-        if (player == null || playerRef == null) {
+        if (playerRef == null) {
             return;
         }
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("action", "Player Craft");
-        metadata.put("playerName", player.getDisplayName());
+        metadata.put("playerName", playerRef.getUsername());
         metadata.put("playerId", playerRef.getUuid().toString());
+        metadata.put("recipeOutput", event.getCraftedRecipe().getOutputs());
+        metadata.put("recipePrimaryOutput", event.getCraftedRecipe().getPrimaryOutput());
+        metadata.put("recipeId", event.getCraftedRecipe().getId());
+        metadata.put("recipeInput", event.getCraftedRecipe().getInput());
 
         FivemanageLogger.info(dataset, "player.craft", metadata);
     }

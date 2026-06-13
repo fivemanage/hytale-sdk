@@ -9,6 +9,9 @@ public class EventsConfig {
             .append(new KeyedCodec<EventCategoryConfig>("ServerLifecycle", EventCategoryConfig.CODEC),
                     (c, v) -> c.serverLifecycle = v, c -> c.serverLifecycle)
             .add()
+            .append(new KeyedCodec<ServerHeartbeatConfig>("ServerHeartbeat", ServerHeartbeatConfig.CODEC),
+                    (c, v) -> c.serverHeartbeat = v, c -> c.serverHeartbeat)
+            .add()
             .append(new KeyedCodec<EventCategoryConfig>("PlayerEvents", EventCategoryConfig.CODEC),
                     (c, v) -> c.playerEvents = v, c -> c.playerEvents)
             .add()
@@ -30,6 +33,7 @@ public class EventsConfig {
             .build();
 
     private EventCategoryConfig serverLifecycle = new EventCategoryConfig(true, "default");
+    private ServerHeartbeatConfig serverHeartbeat = new ServerHeartbeatConfig();
     private EventCategoryConfig playerEvents = new EventCategoryConfig(true, "default");
     private EventCategoryConfig chat = new EventCategoryConfig(true, "default");
     private EventCategoryConfig combat = new EventCategoryConfig(true, "default");
@@ -42,6 +46,10 @@ public class EventsConfig {
 
     public EventCategoryConfig getServerLifecycle() {
         return serverLifecycle;
+    }
+
+    public ServerHeartbeatConfig getServerHeartbeat() {
+        return serverHeartbeat;
     }
 
     public EventCategoryConfig getPlayerEvents() {

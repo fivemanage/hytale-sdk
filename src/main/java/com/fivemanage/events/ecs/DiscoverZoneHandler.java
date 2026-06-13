@@ -29,16 +29,16 @@ public class DiscoverZoneHandler extends EntityEventSystem<EntityStore, Discover
                        @NonNullDecl DiscoverZoneEvent.Display event) {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-        Player player = store.getComponent(ref, Player.getComponentType());
 
-        if (player == null || playerRef == null) {
+        if (playerRef == null) {
             return;
         }
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("action", "Discover Zone");
-        metadata.put("playerName", player.getDisplayName());
+        metadata.put("playerName", playerRef.getUsername());
         metadata.put("playerId", playerRef.getUuid().toString());
+        metadata.put("zoneDiscovery", event.getDiscoveryInfo());
 
         FivemanageLogger.info(dataset, "player.discoverZone", metadata);
     }

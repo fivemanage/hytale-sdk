@@ -31,9 +31,11 @@ public class BreakBlockEvent extends EntityEventSystem<EntityStore, com.hypixel.
                        @NonNullDecl com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent breakBlockEvent) {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-        Player player = store.getComponent(ref, Player.getComponentType());
 
-        if (player == null || playerRef == null) {
+        // might user later for some extra info
+        //Player player = store.getComponent(ref, Player.getComponentType());
+
+        if (playerRef == null) {
             return;
         }
 
@@ -41,7 +43,7 @@ public class BreakBlockEvent extends EntityEventSystem<EntityStore, com.hypixel.
         metadata.put("action", "Block Break");
         metadata.put("blockType", breakBlockEvent.getBlockType().toString());
         metadata.put("blockId", breakBlockEvent.getBlockType().getId());
-        metadata.put("playerName", player.getDisplayName());
+        metadata.put("playerName", playerRef.getUsername());
         metadata.put("playerId", playerRef.getUuid().toString());
 
         FivemanageLogger.info(dataset, "block.break", metadata);

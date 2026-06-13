@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 
@@ -36,7 +37,10 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
             @Nonnull DeathComponent component,
             @Nonnull Store<EntityStore> store,
             @Nonnull CommandBuffer<EntityStore> commandBuffer) {
-        Player playerComponent = store.getComponent(ref, Player.getComponentType());
+
+
+        PlayerRef playerComponent = store.getComponent(ref, PlayerRef.getComponentType());
+
         UUIDComponent uuid = store.getComponent(ref, UUIDComponent.getComponentType());
 
         if (playerComponent == null || uuid == null) {
@@ -45,7 +49,7 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
 
         Map<String, Object> metadata = new HashMap<>();
 
-        metadata.put("playerName", playerComponent.getDisplayName());
+        metadata.put("playerName", playerComponent.getUsername());
         metadata.put("playerId", uuid.getUuid().toString());
 
         var deathInfo = component.getDeathInfo();
@@ -55,12 +59,12 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
             Ref<EntityStore> killerRef = entitySource.getRef();
 
             if (killerRef.isValid()) {
-                Player killer = store.getComponent(killerRef, Player.getComponentType());
+                PlayerRef killer = store.getComponent(killerRef, PlayerRef.getComponentType());
 
                 if (killer != null) {
                     UUIDComponent killerUuid = store.getComponent(killerRef, UUIDComponent.getComponentType());
 
-                    metadata.put("killerName", killer.getDisplayName());
+                    metadata.put("killerName", killer.getUsername());
                     metadata.put("killerId", killerUuid.getUuid().toString());
                     metadata.put("killerType", "player");
                 } else {
@@ -78,11 +82,9 @@ public class DeathSystem extends DeathSystems.OnDeathSystem {
             }
         }
 
-        if (deathInfo != null) {
-            // death amount is the amount of damage taken before death?
-            var deathAmount = deathInfo.getAmount();
-            metadata.put("deathAmount", deathAmount);
-        }
+        // death amount is the amount of damage taken before death?
+        var deathAmount = deathInfo.getAmount();
+        metadata.put("deathAmount", deathAmount);
 
         // returns stuff like
         // deathMessage.messageParams.damageSource.monospace	Null

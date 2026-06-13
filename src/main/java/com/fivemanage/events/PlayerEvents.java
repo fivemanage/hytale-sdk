@@ -1,12 +1,14 @@
 package com.fivemanage.events;
-
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.fivemanage.FivemanageLogger;
 import com.fivemanage.session.PlayerSession;
+import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +21,14 @@ public class PlayerEvents {
     }
 
     public static void onPlayerReady(PlayerReadyEvent event) {
-        Player player = event.getPlayer();
+        Ref<EntityStore> ref = event.getPlayerRef();
+        Store<EntityStore> store = event.getPlayerRef().getStore();
+
+        PlayerRef player = store.getComponent(ref, PlayerRef.getComponentType());
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("action", "Player Ready");
-        metadata.put("playerName", player.getDisplayName());
+        metadata.put("playerName", player.getUsername());
 
         FivemanageLogger.info(dataset, "player.joinedServer", metadata);
     }

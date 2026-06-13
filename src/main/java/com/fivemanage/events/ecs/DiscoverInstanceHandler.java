@@ -29,15 +29,14 @@ public class DiscoverInstanceHandler extends EntityEventSystem<EntityStore, Disc
                        @NonNullDecl DiscoverInstanceEvent.Display event) {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-        Player player = store.getComponent(ref, Player.getComponentType());
 
-        if (player == null || playerRef == null) {
+        if (playerRef == null) {
             return;
         }
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("action", "Discover Instance");
-        metadata.put("playerName", player.getDisplayName());
+        metadata.put("playerName", playerRef.getUsername());
         metadata.put("playerId", playerRef.getUuid().toString());
         metadata.put("instanceWorldId", event.getInstanceWorldUuid().toString());
 

@@ -33,15 +33,14 @@ public class PlaceBlockHandler extends EntityEventSystem<EntityStore, PlaceBlock
                        @NonNullDecl PlaceBlockEvent event) {
         Ref<EntityStore> ref = archetypeChunk.getReferenceTo(i);
         PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-        Player player = store.getComponent(ref, Player.getComponentType());
 
-        if (player == null || playerRef == null) {
+        if (playerRef == null) {
             return;
         }
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("action", "Block Place");
-        metadata.put("playerName", player.getDisplayName());
+        metadata.put("playerName", playerRef.getUsername());
         metadata.put("playerId", playerRef.getUuid().toString());
 
         ItemStack item = event.getItemInHand();

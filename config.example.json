@@ -12,6 +12,7 @@
   },
   "Events": {
     "ServerLifecycle": { "Enabled": true, "Dataset": "default" },
+    "ServerHeartbeat": { "Enabled": true, "Dataset": "server-metrics", "IntervalMs": 30000 },
     "PlayerEvents": { "Enabled": true, "Dataset": "default" },
     "Chat": { "Enabled": true, "Dataset": "default" },
     "Combat": { "Enabled": true, "Dataset": "default" },
