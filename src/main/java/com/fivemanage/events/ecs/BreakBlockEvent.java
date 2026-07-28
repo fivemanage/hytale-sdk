@@ -41,7 +41,6 @@ public class BreakBlockEvent extends EntityEventSystem<EntityStore, com.hypixel.
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("action", "Block Break");
-        metadata.put("blockType", breakBlockEvent.getBlockType().toString());
         metadata.put("blockId", breakBlockEvent.getBlockType().getId());
         metadata.put("playerName", playerRef.getUsername());
         metadata.put("playerId", playerRef.getUuid().toString());

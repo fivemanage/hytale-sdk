@@ -4,6 +4,7 @@ import com.fivemanage.config.EventsConfig;
 import com.fivemanage.config.LogProviderConfig;
 import com.fivemanage.events.ChatEvents;
 import com.fivemanage.events.GameplayEvents;
+import com.fivemanage.events.InventoryEvents;
 import com.fivemanage.events.ServerLifecycleEvents;
 import com.fivemanage.events.ServerHeartbeat;
 import com.fivemanage.events.DeathSystem;
@@ -111,11 +112,19 @@ public class FivemanagePlugin extends JavaPlugin {
             internalLogger.atInfo().log("Registered: Exploration events (zone, instance discovery)");
         }
 
+        if (events.getInventory().isEnabled()) {
+            String ds = events.getInventory().getDataset();
+            InventoryEvents.register(ds);
+            this.getEntityStoreRegistry().registerSystem(new InventoryChangeHandler(ds));
+            internalLogger.atInfo().log("Registered: Inventory events (move, drop, add, container actions)");
+        }
+
         internalLogger.atInfo().log("Fivemanage Logger fully initialized");
     }
 
     @Override
     protected void shutdown() {
+        InventoryEvents.unregister();
         ServerHeartbeat.stop();
         internalLogger.atInfo().log("Flushing logs before shutdown...");
         FivemanageLogger.shutdown();

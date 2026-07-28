@@ -30,6 +30,9 @@ public class EventsConfig {
             .append(new KeyedCodec<EventCategoryConfig>("Exploration", EventCategoryConfig.CODEC),
                     (c, v) -> c.exploration = v, c -> c.exploration)
             .add()
+            .append(new KeyedCodec<EventCategoryConfig>("Inventory", EventCategoryConfig.CODEC),
+                    (c, v) -> c.inventory = v, c -> c.inventory)
+            .add()
             .build();
 
     private EventCategoryConfig serverLifecycle = new EventCategoryConfig(true, "default");
@@ -40,6 +43,7 @@ public class EventsConfig {
     private EventCategoryConfig blockEvents = new EventCategoryConfig(false, "default");
     private EventCategoryConfig gameplay = new EventCategoryConfig(true, "default");
     private EventCategoryConfig exploration = new EventCategoryConfig(true, "default");
+    private EventCategoryConfig inventory = new EventCategoryConfig(false, "default");
 
     public EventsConfig() {
     }
@@ -74,5 +78,9 @@ public class EventsConfig {
 
     public EventCategoryConfig getExploration() {
         return exploration;
+    }
+
+    public EventCategoryConfig getInventory() {
+        return inventory;
     }
 }

@@ -1,11 +1,11 @@
 # Fivemanage Logger - Hytale Server Logging & Analytics
 
-The ultimate logging solution for Hytale dedicated servers. Track player activity, monitor server events, and send logs to Fivemanage, Grafana Loki, or local files.
+The ultimate logging solution for Hytale dedicated servers. Track player activity, monitor server events, and send logs to Fivemanage or Grafana Loki, with optional local file mirroring.
 
 ## Why Use Fivemanage Logger?
 
 - **Track Everything** — Player joins, disconnects, block breaks, and custom events
-- **Multiple Backends** — Send logs to Fivemanage, Grafana Loki, or local files
+- **Multiple Backends** — Send logs to Fivemanage or Grafana Loki, with optional local file mirroring
 - **Built for Performance** — Async batched logging with zero impact on server TPS
 - **Easy Setup** — Drop-in JAR, simple JSON config, works out of the box
 - **Open Source** — MIT licensed, customize to your needs
@@ -14,7 +14,7 @@ The ultimate logging solution for Hytale dedicated servers. Track player activit
 
 | Feature | Description |
 |---------|-------------|
-| **Multi-Provider Support** | Fivemanage, Grafana Loki, file-based logging |
+| **Multi-Provider Support** | Fivemanage and Grafana Loki, plus optional file mirroring |
 | **Batched Logging** | Configurable buffer size and flush intervals |
 | **Player Event Tracking** | Automatic logging of connect, disconnect, session durations |
 | **Server Heartbeat** | Periodically sends current and max player counts for live dashboards |
@@ -37,14 +37,24 @@ The ultimate logging solution for Hytale dedicated servers. Track player activit
   "LogProvider": {
     "Provider": "fivemanage",
     "ApiKey": "your-fivemanage-api-key",
+    "Endpoint": "",
+    "Username": "",
+    "Password": "",
     "WriteToDisk": false,
     "EnableBatching": true,
     "BufferSize": 10,
     "FlushIntervalMs": 5000
   },
-  "PlayerEvents": {
-    "Dataset": "player-events",
-    "Enabled": true
+  "Events": {
+    "ServerLifecycle": { "Enabled": true, "Dataset": "default" },
+    "ServerHeartbeat": { "Enabled": true, "Dataset": "server-metrics", "IntervalMs": 30000 },
+    "PlayerEvents": { "Enabled": true, "Dataset": "default" },
+    "Chat": { "Enabled": true, "Dataset": "default" },
+    "Combat": { "Enabled": true, "Dataset": "default" },
+    "BlockEvents": { "Enabled": false, "Dataset": "default" },
+    "Gameplay": { "Enabled": true, "Dataset": "default" },
+    "Exploration": { "Enabled": true, "Dataset": "default" },
+    "Inventory": { "Enabled": false, "Dataset": "default" }
   }
 }
 ```
@@ -57,6 +67,7 @@ Get your API key from [fivemanage.com](https://fivemanage.com).
 {
   "LogProvider": {
     "Provider": "grafana-loki",
+    "ApiKey": "",
     "Endpoint": "https://logs-prod-us-central1.grafana.net",
     "Username": "your-grafana-username",
     "Password": "your-grafana-api-key",
@@ -65,9 +76,16 @@ Get your API key from [fivemanage.com](https://fivemanage.com).
     "BufferSize": 10,
     "FlushIntervalMs": 5000
   },
-  "PlayerEvents": {
-    "Dataset": "player-events",
-    "Enabled": true
+  "Events": {
+    "ServerLifecycle": { "Enabled": true, "Dataset": "default" },
+    "ServerHeartbeat": { "Enabled": true, "Dataset": "server-metrics", "IntervalMs": 30000 },
+    "PlayerEvents": { "Enabled": true, "Dataset": "default" },
+    "Chat": { "Enabled": true, "Dataset": "default" },
+    "Combat": { "Enabled": true, "Dataset": "default" },
+    "BlockEvents": { "Enabled": false, "Dataset": "default" },
+    "Gameplay": { "Enabled": true, "Dataset": "default" },
+    "Exploration": { "Enabled": true, "Dataset": "default" },
+    "Inventory": { "Enabled": false, "Dataset": "default" }
   }
 }
 ```
@@ -78,29 +96,45 @@ Get your API key from [fivemanage.com](https://fivemanage.com).
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `Provider` | string | `fivemanage`, `grafana-loki`, or `file` |
+| `Provider` | string | `fivemanage`, `grafana-loki`, or `loki` |
 | `ApiKey` | string | API key for Fivemanage |
 | `Endpoint` | string | Loki push endpoint URL |
 | `Username` | string | Basic auth username (Loki) |
 | `Password` | string | Basic auth password (Loki) |
-| `WriteToDisk` | boolean | Also write logs to local files |
+| `WriteToDisk` | boolean | Also mirror logs to local files |
 | `EnableBatching` | boolean | Buffer logs before sending |
 | `BufferSize` | integer | Logs to buffer before flush (default: 10) |
 | `FlushIntervalMs` | integer | Max time before flush in ms (default: 5000) |
 
-### Player Events Options
+> **Note:** Local files are enabled with `WriteToDisk`; `file` is not a standalone provider value.
+
+### Event Category Options
+
+All automatic logging is configured under the top-level `Events` object.
+
+| Category | Description |
+|----------|-------------|
+| `ServerLifecycle` | Server start and shutdown logs |
+| `ServerHeartbeat` | Periodic player count heartbeat logs |
+| `PlayerEvents` | Player connect, ready, disconnect, and session duration logs |
+| `Chat` | Player chat logs |
+| `Combat` | Player death and kill logs |
+| `BlockEvents` | Block break and place logs; disabled by default because it can be noisy |
+| `Gameplay` | Crafting, treasure, and game mode logs |
+| `Exploration` | Zone and instance discovery logs |
+| `Inventory` | Inventory moves, drops, additions, creative item actions, and open-container/chest transfer requests; disabled by default because it can be noisy |
+
+Most event categories use these options:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `Dataset` | string | Dataset/label name for player events |
-| `Enabled` | boolean | Enable automatic player event logging |
+| `Dataset` | string | Dataset/label name for that event category |
+| `Enabled` | boolean | Enable automatic logging for that event category |
 
-### Server Heartbeat Options
+`ServerHeartbeat` also supports:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `Dataset` | string | Dataset/label name for player count heartbeat logs |
-| `Enabled` | boolean | Enable periodic player count heartbeat logs |
 | `IntervalMs` | integer | Heartbeat interval in milliseconds (default: `30000`) |
 
 ## Usage in Your Hytale Mod
@@ -108,7 +142,7 @@ Get your API key from [fivemanage.com](https://fivemanage.com).
 Use the `FivemanageLogger` API to send custom logs from your own Hytale mods:
 
 ```java
-import org.fivemanage.FivemanageLogger;
+import com.fivemanage.FivemanageLogger;
 import java.util.Map;
 
 // Log with metadata
@@ -128,7 +162,7 @@ The SDK will automatically store each player when they connect and record their 
 
 ## Player Events
 
-When `PlayerEvents.Enabled` is `true`, these events are logged automatically:
+When `Events.PlayerEvents.Enabled` is `true`, these events are logged automatically:
 
 | Event | Description |
 |-------|-------------|
@@ -184,7 +218,7 @@ If killed by an NPC:
 
 > **Note:** Some fields may be omitted depending on the specific death circumstances (e.g., no `killerName` if there was no killer).
 
-These logs appear under the dataset and label you configure for player events (e.g., `player.died`). You can use this data for analytics, kill feeds, PvP stats, auditing, or integrations with your logging/monitoring stack.
+These logs appear under the dataset you configure for combat events (e.g., `Events.Combat.Dataset`) with the `player.died` message. You can use this data for analytics, kill feeds, PvP stats, auditing, or integrations with your logging/monitoring stack.
 
 
 
